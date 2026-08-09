@@ -1,5 +1,4 @@
-const SPREADSHEET_ID = "16NEWBjF3UWiTNad_MHTpkhClw_hWNQt5fJpv7d_xgf8";
-const GATEWAY = "https://connector-gateway.lovable.dev/google_sheets/v4";
+import { fetchGoogleSheetRange } from "./google-sheet.server";
 
 export interface Block {
   label?: string;
@@ -34,31 +33,7 @@ function at(grid: Grid, row: number, col: number): string {
 }
 
 async function getGrid(tab: string, range: string): Promise<Grid> {
-  const lovableKey = process.env["LOVABLE_API_KEY"];
-  const connectionKey = process.env["GOOGLE_SHEETS_API_KEY"];
-  if (!lovableKey || !connectionKey) {
-    throw new Error("Google Sheets connection is not configured.");
-  }
-
-  const a1 = `'${tab.replace(/'/g, "''")}'!${range}`;
-  const res = await fetch(
-    `${GATEWAY}/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(a1).replace(/%3A/g, ":").replace(/%21/g, "!")}?valueRenderOption=FORMATTED_VALUE`,
-    {
-      headers: {
-        Authorization: `Bearer ${lovableKey}`,
-        "X-Connection-Api-Key": connectionKey,
-      },
-    },
-  );
-
-  if (!res.ok) {
-    const body = await res.text();
-    console.error(`Google Sheets request failed [${res.status}]: ${body}`);
-    throw new Error(`Google Sheets request failed [${res.status}]`);
-  }
-
-  const json = (await res.json()) as { values?: string[][] };
-  return json.values ?? [];
+  return fetchGoogleSheetRange(tab, range);
 }
 
 interface BlockSpec {

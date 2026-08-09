@@ -20,6 +20,7 @@ function Unlock() {
   const router = useRouter();
   const unlock = useServerFn(unlockSite);
   const [error, setError] = useState(false);
+  const [configurationError, setConfigurationError] = useState(false);
   const [busy, setBusy] = useState(false);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -27,6 +28,7 @@ function Unlock() {
     const password = String(new FormData(e.currentTarget).get("password") ?? "");
     setBusy(true);
     setError(false);
+    setConfigurationError(false);
     try {
       const { ok } = await unlock({ data: { password } });
       if (ok) {
@@ -34,6 +36,8 @@ function Unlock() {
         return;
       }
       setError(true);
+    } catch {
+      setConfigurationError(true);
     } finally {
       setBusy(false);
     }
@@ -52,6 +56,7 @@ function Unlock() {
 
         <form onSubmit={onSubmit} className="mt-6 space-y-3">
           <input
+            aria-label="Password"
             name="password"
             type="password"
             autoComplete="current-password"
@@ -62,6 +67,12 @@ function Unlock() {
           />
           {error && (
             <p className="text-sm font-medium text-destructive">Incorrect password</p>
+          )}
+          {configurationError && (
+            <p className="text-sm font-medium text-destructive">
+              Server access is not configured. Add SITE_PASSWORD and SESSION_SECRET to the
+              deployment environment, then restart or redeploy.
+            </p>
           )}
           <button
             type="submit"

@@ -1,6 +1,6 @@
-const SPREADSHEET_ID = "16NEWBjF3UWiTNad_MHTpkhClw_hWNQt5fJpv7d_xgf8";
-const RANGE = "Dashboard!A5:R27";
-const GATEWAY = "https://connector-gateway.lovable.dev/google_sheets/v4";
+import { fetchGoogleSheetRange } from "./google-sheet.server";
+
+const RANGE = "A5:R27";
 
 export interface AccountRow {
   name: string;
@@ -25,30 +25,7 @@ function clean(value: unknown): string {
 }
 
 export async function fetchDashboard(): Promise<DashboardData> {
-  const lovableKey = process.env["LOVABLE_API_KEY"];
-  const connectionKey = process.env["GOOGLE_SHEETS_API_KEY"];
-  if (!lovableKey || !connectionKey) {
-    throw new Error("Google Sheets connection is not configured.");
-  }
-
-  const res = await fetch(
-    `${GATEWAY}/spreadsheets/${SPREADSHEET_ID}/values/${RANGE}?valueRenderOption=FORMATTED_VALUE`,
-    {
-      headers: {
-        Authorization: `Bearer ${lovableKey}`,
-        "X-Connection-Api-Key": connectionKey,
-      },
-    },
-  );
-
-  if (!res.ok) {
-    const body = await res.text();
-    console.error(`Google Sheets request failed [${res.status}]: ${body}`);
-    throw new Error(`Google Sheets request failed [${res.status}]: ${body}`);
-  }
-
-  const json = (await res.json()) as { values?: string[][] };
-  const rows = json.values ?? [];
+  const rows = await fetchGoogleSheetRange("Dashboard", RANGE);
   const at = (rowOffset: number, col: number) => clean(rows[rowOffset]?.[col]);
 
   const accounts = (nameCol: number, valueCol: number): AccountRow[] =>
