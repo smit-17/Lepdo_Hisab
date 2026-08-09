@@ -1,7 +1,7 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import logo from "@/assets/lepdo-logo.png.asset.json";
+import logo from "@/assets/logo.png";
 import { unlockSite } from "@/lib/gate.functions";
 
 export const Route = createFileRoute("/unlock")({
@@ -46,7 +46,7 @@ function Unlock() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-navy px-4 py-12">
       <div className="w-full max-w-sm rounded-2xl bg-card p-6 shadow-xl sm:p-8">
-        <img src={logo.url} alt="LEPDO" className="mx-auto h-10 w-auto" />
+        <img src={logo} alt="LEPDO" className="mx-auto h-10 w-auto" />
         <h1 className="mt-6 text-center text-lg font-bold tracking-tight text-foreground">
           LEPDO BOOKS
         </h1>

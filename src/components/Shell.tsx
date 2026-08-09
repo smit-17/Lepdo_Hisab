@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useRouter, useRouterState } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import logo from "@/assets/lepdo-logo.png.asset.json";
+import logo from "@/assets/logo.png";
 import { lockSite } from "@/lib/gate.functions";
 import { NAV_ITEMS } from "@/lib/sheet-format";
 
@@ -56,7 +56,7 @@ export function Shell({ updatedAt, isFetching, onRefresh, children }: ShellProps
       {/* Desktop fixed sidebar */}
       <aside className="hidden w-64 shrink-0 flex-col bg-navy text-navy-foreground lg:sticky lg:top-0 lg:flex lg:h-screen">
         <Link to="/" className="flex items-center gap-3 px-4 py-4">
-          <img src={logo.url} alt="LEPDO" className="h-9 w-auto rounded-md bg-card px-2 py-1" />
+          <img src={logo} alt="LEPDO" className="h-9 w-auto rounded-md bg-card px-2 py-1" />
           <span className="text-sm font-black tracking-tight">LEPDO BOOKS</span>
         </Link>
         <div className="flex-1 overflow-y-auto border-t border-navy-foreground/15 px-3 py-3">
@@ -77,7 +77,7 @@ export function Shell({ updatedAt, isFetching, onRefresh, children }: ShellProps
                 Menu
               </button>
               <img
-                src={logo.url}
+                src={logo}
                 alt="LEPDO"
                 className="h-8 w-auto shrink-0 rounded-md bg-card px-2 py-1 lg:hidden"
               />
